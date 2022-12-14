@@ -1,14 +1,20 @@
 from django.contrib import admin
-
-from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
+from recipes.models import (Favorite, Ingredient, IngredientsRecipe, Recipe,
+                            ShoppingCart, Tag)
 
 EMPTY_VALUE = '-пусто-'
+
+
+class IngredientInline(admin.TabularInline):
+    model = IngredientsRecipe
+    extra = 2
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     """Представляет модель Tag в интерфейсе администратора."""
     list_display = ('id', 'name', 'color', 'slug')
+    prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
     list_filter = ('name',)
     empty_value_display = EMPTY_VALUE
@@ -29,6 +35,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author')
     search_fields = ('author', 'name', 'tags')
     empty_value_display = EMPTY_VALUE
+    inlines = (IngredientInline,)
 
     def is_favorited(self, obj):
         return Favorite.objects.filter(recipe=obj).count()

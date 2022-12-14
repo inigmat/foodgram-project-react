@@ -18,7 +18,6 @@ from api.mixins import CreateListDestroytViewSet
 from api.permissions import IsAuthorOrAdminOrReadOnly
 from api.serializers import (FavoritedSerializer, IngredientSerializer,
                              RecipeCreateSerializer, RecipeListSerializer,
-                             SubscriptionListSerializer,
                              SubscriptionSerializer, TagSerializer,
                              UserSerializer)
 from recipes.models import (Favorite, Ingredient, IngredientsRecipe, Recipe,
@@ -34,13 +33,14 @@ class CustomUserViewSet(UserViewSet):
     pagination_class = PageNumberPagination
 
     @action(detail=False, methods=['get'],
-            permission_classes=[IsAuthenticated])
+            permission_classes=[IsAuthenticated],
+            pagination_class=LimitOffsetPagination)
     def subscriptions(self, request, pk=None):
         authors = User.objects.filter(following__user=request.user)
         recipes_limit = request.query_params.get('recipes_limit')
         paginator = LimitOffsetPagination()
         result_page = paginator.paginate_queryset(authors, request)
-        serializer = SubscriptionListSerializer(
+        serializer = SubscriptionSerializer(
             result_page, many=True, context={
                 'current_user': request.user,
                 'recipes_limit': recipes_limit
@@ -48,26 +48,30 @@ class CustomUserViewSet(UserViewSet):
         )
         return paginator.get_paginated_response(serializer.data)
 
-    @action(detail=True, methods=['get', 'delete'],
-            permission_classes=[IsAuthenticated], pagination_class=None)
+    @action(methods=['post', 'delete'], detail=True,
+            permission_classes=[IsAuthenticated])
     def subscribe(self, request, id):
+        response_errors = {
+            'POST': ('Вы уже подписаны на этого автора или '
+                     'пытаетеcь подписаться на самого себя'),
+            'DELETE': 'Вы не подписаны на этого автора',
+        }
         author = get_object_or_404(User, id=id)
-        serializer = SubscriptionListSerializer(
-            data={'user': request.user, 'author': author},
-            context={'request': request}
-        )
-        if request.method == 'GET':
-            serializer.is_valid(raise_exception=True)
-            serializer.save(author=author, user=request.user)
-            serializer = SubscriptionSerializer(author)
+        user = request.user
+        subscription = Subscription.objects.filter(author=author, user=user)
+        is_subscribed = bool(subscription)
+        if request.method == 'POST' and author != user and not is_subscribed:
+            subscription = Subscription(author=author, user=user)
+            subscription.save()
+            request = self.request
+            context = {'request': request}
+            serializer = SubscriptionSerializer(author, context=context,)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        subscription = get_object_or_404(Subscription, author=author,
-                                         user=request.user)
-        self.perform_destroy(subscription)
-        return Response(
-            f'{request.user} отписан от {author}',
-            status=status.HTTP_204_NO_CONTENT
-        )
+        if request.method == 'DELETE' and is_subscribed:
+            subscription.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        response = {'errors': response_errors[request.method]}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TagsViewSet(CreateListDestroytViewSet):
@@ -134,14 +138,13 @@ class RecipesViewSet(ModelViewSet):
             'POST': 'Рецепт уже добавлен в списко покупок',
             'DELETE': 'Рецепт в корзине отсутствует',
         }
-        user = self.request.user
         recipe = get_object_or_404(Recipe, pk=pk)
         in_shopping_cart = ShoppingCart.objects.filter(
-            user=user,
+            user=self.request.user,
             recipe=recipe
         )
         if request.method == 'POST' and not in_shopping_cart:
-            shopping_cart = ShoppingCart.objects.create(user=user,
+            shopping_cart = ShoppingCart.objects.create(user=self.request.user,
                                                         recipe=recipe)
             serializer = FavoritedSerializer(shopping_cart.recipe)
             return Response(

@@ -28,7 +28,7 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex=r'^[-a-zA-Z0-9_]+$',
-                message='Не корректный slug',
+                message='Некорректный slug',
                 code='invalid_slug',
             ),
         ])
@@ -61,34 +61,13 @@ class Ingredient(models.Model):
         return f'{self.name} ({self.measurement_unit})'
 
 
-class IngredientsRecipe(models.Model):
-    """Количество ингредиентов в рецепте."""
-    ingredient = models.ForeignKey(
-        Ingredient,
-        on_delete=models.CASCADE,
-        related_name='recipe',
-        verbose_name='Ингредиент'
-    )
-    amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество',
-        validators=(MinValueValidator(MIN_INGREDIENTS_AMOUNT),),
-    )
-
-    class Meta:
-        unique_together = ('ingredient', 'amount')
-        verbose_name = 'Количество ингредиентов'
-        verbose_name_plural = 'Количество ингредиентов'
-
-    def __str__(self):
-        return f'{self.ingredient} - {self.amount}'
-
-
 class Recipe(models.Model):
     """Модель рецепта."""
     ingredients = models.ManyToManyField(
-        IngredientsRecipe,
+        Ingredient,
         related_name='ingredients',
-        verbose_name='Список ингредиентов'
+        verbose_name='Список ингредиентов',
+        through='IngredientsRecipe'
     )
     tags = models.ManyToManyField(
         Tag,
@@ -130,6 +109,37 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class IngredientsRecipe(models.Model):
+    """Количество ингредиентов в рецепте."""
+    recipe = models.ForeignKey(
+        Recipe,
+        verbose_name='В каких рецептах',
+        related_name='recipe',
+        on_delete=models.CASCADE,
+    )
+    ingredients = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name='ingredient',
+        verbose_name='Ингредиент'
+    )
+    amount = models.PositiveSmallIntegerField(
+        verbose_name='Количество',
+        validators=(MinValueValidator(
+            MIN_INGREDIENTS_AMOUNT,
+            'Количество элементов должно быть больше 0'),
+        )
+    )
+
+    class Meta:
+        unique_together = ('ingredients', 'amount')
+        verbose_name = 'Количество ингредиентов'
+        verbose_name_plural = 'Количество ингредиентов'
+
+    def __str__(self):
+        return f'{self.ingredients} - {self.amount}'
 
 
 class Favorite(models.Model):
