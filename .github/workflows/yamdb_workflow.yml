@@ -34,8 +34,8 @@ jobs:
     - name: Create projects directory
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST_IP }}
-        username: ${{ secrets.HOST_USER }}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd projects
@@ -45,11 +45,11 @@ jobs:
       uses: garygrossgarten/github-action-scp@release
       with:
           local: infra/
-          remote: /${{ secrets.HOST_USER }}/projects/foodgram/
-          host: ${{ secrets.HOST_IP }}
-          username: ${{ secrets.HOST_USER }}
+          remote: /${{ secrets.USER }}/projects/foodgram/
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
           privateKey: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.HOST_PASS }}
+          passphrase: ${{ secrets.PASSPHRASE }}
 
   build_push_backend_to_DockerHub:
     name: Building back image and pushing it to Docker Hub
