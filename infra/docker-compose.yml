@@ -26,7 +26,7 @@ services:
       - ./.env
 
   frontend:
-    image: ilgiznigma/foodgram-frontend:latest
+    image: blackmamba05/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
   
