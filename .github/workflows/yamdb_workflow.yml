@@ -24,101 +24,100 @@ jobs:
       run: |
         python -m flake8 backend/
 
-  copy_infra_to_server:
-    name: Copy docker-compose.yml and nginx.conf
-    runs-on: ubuntu-latest
-    needs: tests
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Create projects directory
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          sudo rm -rf foodgram
-          mkdir -p foodgram
-    - name: Copy files
-      uses: garygrossgarten/github-action-scp@release
-      with:
-          local: infra/
-          remote: /${{ secrets.USER }}/foodgram/
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          privateKey: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-
-  build_push_backend_to_DockerHub:
-    name: Building back image and pushing it to Docker Hub
-    runs-on: ubuntu-20.04
-    needs: tests
-    if: github.ref == 'refs/heads/master'
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Login to Docker
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Push "foodgram/backend" to DockerHub
-      uses: docker/build-push-action@v2
-      with:
-        context: backend/
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
-
-  build_push_frontend_to_DockerHub:
-    name: Building front image and pushing it to Docker Hub
-    runs-on: ubuntu-20.04
-    needs: tests
-    if: github.ref == 'refs/heads/master'
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Login to Docker
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Push "foodgram/frontend" to DockerHub
-      uses: docker/build-push-action@v2
-      with:
-        context: frontend/
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
-
-#  build_and_push_to_docker_hub:
-#    name: Push Docker image to Docker Hub
+#  copy_infra_to_server:
+#    name: Copy docker-compose.yml and nginx.conf
 #    runs-on: ubuntu-latest
-#    needs: tests    
+#    needs: tests
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Create project directory
+#      uses: appleboy/ssh-action@master
+#      with:
+#        host: ${{ secrets.HOST }}
+#        username: ${{ secrets.USER }}
+#        key: ${{ secrets.SSH_KEY }}
+#        script: |
+#          sudo rm -rf foodgram
+#          mkdir -p foodgram
+#    - name: Copy files
+#      uses: garygrossgarten/github-action-scp@release
+#      with:
+#          local: infra/
+#          remote: /${{ secrets.USER }}/foodgram/
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USER }}
+#          privateKey: ${{ secrets.SSH_KEY }}
+#          passphrase: ${{ secrets.PASSPHRASE }}
+
+#  build_push_backend_to_DockerHub:
+#    name: Building back image and pushing it to Docker Hub
+#    runs-on: ubuntu-20.04
+#    needs: tests
 #    if: github.ref == 'refs/heads/master'
 #    steps:
-#      - name: Check out the repo
-#        uses: actions/checkout@v2 
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v1
-#      - name: Login to Docker 
-#        uses: docker/login-action@v1
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }} 
-#          password: ${{ secrets.DOCKER_PASSWORDWORD }}
-#      - name: Push to Docker Hub
-#        uses: docker/build-push-action@v2 
-#        with:
-#          push: true
-#          context: ./backend
-#          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
+#    - uses: actions/checkout@v2
+#
+#    - name: Set up Docker Buildx
+#      uses: docker/setup-buildx-action@v1
+#
+#    - name: Login to Docker
+#      uses: docker/login-action@v1
+#      with:
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#
+#    - name: Push "foodgram/backend" to DockerHub
+#      uses: docker/build-push-action@v2
+#      with:
+#        context: backend/
+#        push: true
+#        tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
+#
+#  build_push_frontend_to_DockerHub:
+#    name: Building front image and pushing it to Docker Hub
+#    runs-on: ubuntu-20.04
+#    needs: tests
+#    if: github.ref == 'refs/heads/master'
+#    steps:
+#    - uses: actions/checkout@v2
+#
+#    - name: Set up Docker Buildx
+#      uses: docker/setup-buildx-action@v1
+#
+#    - name: Login to Docker
+#      uses: docker/login-action@v1
+#      with:
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#
+#    - name: Push "foodgram/frontend" to DockerHub
+#      uses: docker/build-push-action@v2
+#      with:
+#        context: frontend/
+#        push: true
+#        tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
+
+  build_and_push_to_docker_hub:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    needs: tests    
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to Docker 
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} 
+          password: ${{ secrets.DOCKER_PASSWORDWORD }}
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v2 
+        with:
+          push: true
+          context: ./backend
+          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
 #      - name: Push frontend to Docker Hub
 #        uses: docker/build-push-action@v2
 #        with:
@@ -129,11 +128,11 @@ jobs:
   deploy:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-#    needs: build_and_push_to_docker_hub
-    needs:
-      - copy_infra_to_server
-      - build_push_backend_to_DockerHub
-      - build_push_frontend_to_DockerHub
+    needs: build_and_push_to_docker_hub
+#    needs:
+#      - copy_infra_to_server
+#      - build_push_backend_to_DockerHub
+#      - build_push_frontend_to_DockerHub
     steps:
       - name: executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
