@@ -23,9 +23,9 @@ class User(AbstractUser):
         max_length=150,
     )
 
-    @property
-    def is_admin(self):
-        return self.is_superuser or self.is_staff
+#    @property
+#    def is_admin(self):
+#        return self.is_superuser or self.is_staff
 
     class Meta:
         verbose_name = 'Пользователь'
