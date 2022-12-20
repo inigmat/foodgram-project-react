@@ -12,6 +12,7 @@ DEFAULT_USER_LEVEL = 'user'
 
 class User(AbstractUser):
     """Модель пользователя."""
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
     email = models.EmailField(
         verbose_name='Адрес электронной почты',
         max_length=254,
