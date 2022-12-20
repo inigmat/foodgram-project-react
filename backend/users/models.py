@@ -2,6 +2,13 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+USER_LEVEL_CHOICES = (
+    ('admin', 'admin'),
+    ('user', 'user'),
+)
+
+DEFAULT_USER_LEVEL = 'user'
+
 class User(AbstractUser):
     """Модель пользователя."""
     email = models.EmailField(
@@ -22,10 +29,16 @@ class User(AbstractUser):
         verbose_name='Фамилия',
         max_length=150,
     )
+    role = models.CharField(
+        max_length=30,
+        choices=USER_LEVEL_CHOICES,
+        default=DEFAULT_USER_LEVEL,
+        verbose_name='Роль'
+    )
 
-#    @property
-#    def is_admin(self):
-#        return self.is_superuser or self.is_staff
+    @property
+    def is_admin(self):
+        return self.is_superuser or self.role == "admin"
 
     class Meta:
         verbose_name = 'Пользователь'
