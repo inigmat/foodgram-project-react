@@ -9,6 +9,7 @@ USER_LEVEL_CHOICES = (
 
 DEFAULT_USER_LEVEL = 'user'
 
+
 class User(AbstractUser):
     """Модель пользователя."""
     email = models.EmailField(
