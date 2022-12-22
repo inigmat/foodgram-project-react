@@ -22,4 +22,4 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             request.method in ('GET',)
             or request.user.is_authenticated
             and request.user.is_admin
-        )           
+        )
