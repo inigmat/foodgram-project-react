@@ -3,10 +3,9 @@ import re
 from django.db.models import F
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
-
 from recipes.models import (Favorite, Ingredient, IngredientsRecipe, Recipe,
                             ShoppingCart, Tag)
+from rest_framework import serializers
 from users.models import Subscription, User
 
 MIN_AMOUNT_ERR_MSG = "Значение должно быть больше 0"
