@@ -15,7 +15,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import CreateListDestroytViewSet
-from api.permissions import IsAuthorOrAdminOrReadOnly
+from api.permissions import IsAuthorOrAdminOrReadOnly, IsAdminOrReadOnly
 from api.serializers import (FavoritedSerializer, IngredientSerializer,
                              RecipeCreateSerializer, RecipeListSerializer,
                              SubscriptionSerializer, TagSerializer,
@@ -78,6 +78,7 @@ class TagsViewSet(CreateListDestroytViewSet):
     """Тэги."""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = (IsAdminOrReadOnly,)
     pagination_class = None
 
 
