@@ -74,10 +74,10 @@ sudo docker-compose exec backend python manage.py loadingredients
 ```
 sudo docker-compose exec backend python manage.py createsuperuser
 ```
-Админка будет доступан по адресу: http://foodgram.viewdns.net/admin/
+Админка будет доступна по адресу: http://<ваш домен или ip>/admin/
 
 8. API проекта доступно по адресу: 
-http://foodgram.viewdns.net/api/
+http://<ваш домен или ip>/api/
 
 
 Разработка backend части проекта: [Ильгиз Нигматуллин](https://github.com/ilgiz-n)
