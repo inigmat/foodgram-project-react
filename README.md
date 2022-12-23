@@ -50,29 +50,34 @@ DB_PORT=5432
 
 5. Запустите контейнеры:
 
-`docker-compose up -d`
+```
+docker-compose up -d
+```
 
 6. Выполните миграции, заполните базу данных ингридиентами выполнив последовательно следующие команды:
 
 ```
 sudo docker-compose exec backend python manage.py makemigrations
-
+```
+```
 sudo docker-compose exec backend python manage.py migrate
-
+```
+```
 sudo docker-compose exec backend python manage.py collectstatic --no-input
-
+```
+```
 sudo docker-compose exec backend python manage.py loadingredients
 ```
 
-7. Для доступа в админку создайте суперпользователя. Админка будет доступан по адресу: 
-http://foodgram.viewdns.net/admin/
+7. Для доступа в админку создайте суперпользователя. 
 
 ```
 sudo docker-compose exec backend python manage.py createsuperuser
 ```
+Админка будет доступан по адресу: http://foodgram.viewdns.net/admin/
 
 8. API проекта доступно по адресу: 
 http://foodgram.viewdns.net/api/
 
 
-### Разработка backend части проекта: [Ильгиз Нигматуллин](https://github.com/ilgiz-n)
+Разработка backend части проекта: [Ильгиз Нигматуллин](https://github.com/ilgiz-n)
