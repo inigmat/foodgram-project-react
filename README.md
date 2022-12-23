@@ -1,9 +1,12 @@
 # `Foodgram` - сайт 'Продуктовый помощник'
 
-[![foodgram-project-react workflow](https://github.com/ilgiz-n/foodgram-project-react/actions/workflows/foodgram_workflow.yaml/badge.svg)](https://github.com/ilgiz-n/foodgram-project-react/actions/workflows/foodgram_workflow.yml)
+![foodgram workflow](https://github.com/ilgiz-n/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg)
 
 #### О проекте:
  Онлайн-сервис и API для него. На этом сервисе пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
+
+ Проект доступен по адресу:
+ http://foodgram.viewdns.net/recipes
  
 #### Технологии:
 - Python
@@ -16,40 +19,60 @@
 
 #### Как запустить проект:
 
-Клонировать репозиторий и перейти в него в командной строке:
+1. Клонировать репозиторий:
 
-`https://github.com/ilgiz-n/foodgram-project-react.git`
+```
+https://github.com/ilgiz-n/foodgram-project-react.git
+```
 
-`cd foodgram-project-react`
+2. Перейти в папку с проектом
 
-Установить Docker и Docker Compose (нативная ОС для Docker — Linux, поэтому запуск Docker-контейнеров должен происходить внутри виртуальной машины с ОС Linux):
+```
+cd foodgram-project-react
+```
 
-`sudo apt install docker-ce docker-compose -y`
+3. Установить Docker и Docker Compose (на Linux):
 
-Для работы с базой данных создать файл .env c переменными окружения. В директории backend/ проекта расположен файл .env.example, в котором описаны примеры переменных и их значений.
+```
+sudo apt install docker-ce docker-compose -y
+```
 
-Запуск контейнера:
+4. Создайте файл окружения .env в папке infra заполнив его по следующему шаблону
+
+```
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres (здесь ваш пароль)
+DB_HOST=db
+DB_PORT=5432
+```
+
+5. Запустите контейнеры:
 
 `docker-compose up -d`
 
-Заполнение базы данными:
+6. Выполните миграции, заполните базу данных ингридиентами выполнив последовательно следующие команды:
 
-`sudo docker-compose exec backend python manage.py collectstatic --no-input`
+```
+sudo docker-compose exec backend python manage.py makemigrations
 
-`sudo docker-compose exec backend python manage.py makemigrations --noinput`
+sudo docker-compose exec backend python manage.py migrate
 
-`sudo docker-compose exec backend python manage.py migrate --noinput`
+sudo docker-compose exec backend python manage.py collectstatic --no-input
 
-`sudo docker-compose exec backend python manage.py createsuperuser`
+sudo docker-compose exec backend python manage.py loadingredients
+```
 
-`sudo docker-compose exec backend python manage.py loader`
+7. Для доступа в админку создайте суперпользователя. Админка будет доступан по адресу: 
+http://foodgram.viewdns.net/admin/
+
+```
+sudo docker-compose exec backend python manage.py createsuperuser
+```
+
+8. API проекта доступно по адресу: 
+http://foodgram.viewdns.net/api/
 
 
-Докуметация API:
-
-`http://foodgram.viewdns.net/api/docs/redoc.html`
-
-Проект:
-
-`http://foodgram.viewdns.net`
-
+### Разработка backend части проекта: [Ильгиз Нигматуллин](https://github.com/ilgiz-n)
