@@ -170,9 +170,9 @@ class RecipesViewSet(ModelViewSet):
         ).annotate(ingredient_amount=Sum('amount')).values_list(
             'ingredients__name', 'ingredients__measurement_unit',
             'ingredient_amount')
-        response = HttpResponse(content_type='text/csv')
+        response = HttpResponse(content_type='text/txt')
         response['Content-Disposition'] = ('attachment;'
-                                           'filename="Shoppingcart.csv"')
+                                           'filename="Shoppingcart.txt"')
         response.write(u'\ufeff'.encode('utf8'))
         writer = csv.writer(response)
         for item in list(ingredients):
