@@ -300,7 +300,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
     def get_recipes(self, value):
         queryset = Recipe.objects.filter(author=value)
-        if bool(self.context.get('recipes_limit')):
+        if self.context.get('recipes_limit') is not None:
             recipes = queryset[:int(self.context['recipes_limit'])]
         else:
             recipes = queryset
