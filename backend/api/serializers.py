@@ -298,14 +298,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
                   'is_subscribed', 'recipes', 'recipes_count')
 
-#    def get_recipes(self, value):
-#        queryset = Recipe.objects.filter(author=value)
-#        if self.context.get('recipes_limit') is not None:
-#            recipes = queryset[:int(self.context['recipes_limit'])]
-#        else:
-#            recipes = queryset
-#        return FavoritedSerializer(recipes, many=True).data
-
     def get_recipes(self, value):
         queryset = Recipe.objects.filter(author=value)
         if not self.context.get('recipes_limit'):
