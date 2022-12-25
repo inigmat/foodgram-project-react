@@ -34,6 +34,7 @@ class RecipeAdmin(admin.ModelAdmin):
     """Представляет модель Recipe в интерфейсе администратора."""
     list_display = ('id', 'name', 'author')
     search_fields = ('author', 'name', 'tags')
+    list_filter = ('name', 'author', 'tags')
     empty_value_display = EMPTY_VALUE
     inlines = (IngredientInline,)
 
