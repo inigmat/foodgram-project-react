@@ -35,11 +35,12 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author')
     fields = (
         ('name', 'cooking_time',),
+        'ingredients',
         'author',
         'tags',
         'text',
         'image',
-        'in_favorite'
+        'get_in_favorite'
     )
     search_fields = ('author', 'name', 'tags')
     list_filter = ('name', 'author', 'tags')
@@ -47,7 +48,7 @@ class RecipeAdmin(admin.ModelAdmin):
     inlines = (IngredientInline,)
 
     @admin.display(description='В избранном')
-    def in_favorite(self, obj):
+    def get_in_favorite(self, obj):
         # return Favorite.objects.filter(recipe=obj).count()
         return obj.favorites.count()
 
