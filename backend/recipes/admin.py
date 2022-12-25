@@ -8,6 +8,7 @@ EMPTY_VALUE = '-пусто-'
 class IngredientInline(admin.StackedInline):
     model = IngredientsRecipe
     autocomplete_fields = ('ingredients',)
+    extra = 1
 
 
 @admin.register(Tag)
