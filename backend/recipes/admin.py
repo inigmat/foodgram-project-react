@@ -32,7 +32,15 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Представляет модель Recipe в интерфейсе администратора."""
-    list_display = ('id', 'name', 'author', 'in_favorite')
+    list_display = ('id', 'name', 'author')
+    fields = (
+        ('name', 'cooking_time',),
+        'author', 
+        'tags',
+        'text',
+        'image',
+        'in_favorite'
+    )
     search_fields = ('author', 'name', 'tags')
     list_filter = ('name', 'author', 'tags')
     empty_value_display = EMPTY_VALUE
