@@ -39,7 +39,6 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author')
     fields = (
         ('name', 'cooking_time',),
-        # 'ingredients',
         'author',
         'tags',
         'text',
@@ -52,16 +51,9 @@ class RecipeAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY_VALUE
     inlines = (IngredientInline,)
 
-    @admin.display(description='В избранном')
+    @admin.display(description='Количество добавлений в избранное')
     def favorited_number(self, obj):
-        # return Favorite.objects.filter(recipe=obj).count()
         return obj.favorites.count()
-
-    # @admin.display(description='Ингредиенты')
-    # def ingredients(self, obj):
-    #     return '\n'.join(
-    #         [str(ingredients) for ingredients in obj.ingredients.all()]
-    #     )
 
 
 @admin.register(Favorite)
