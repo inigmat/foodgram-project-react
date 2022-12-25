@@ -57,11 +57,11 @@ class RecipeAdmin(admin.ModelAdmin):
         # return Favorite.objects.filter(recipe=obj).count()
         return obj.favorites.count()
 
-    @admin.display(description='Ингредиенты')
-    def ingredients(self, obj):
-        return '\n'.join(
-            [str(ingredients) for ingredients in obj.ingredients.all()]
-        )
+    # @admin.display(description='Ингредиенты')
+    # def ingredients(self, obj):
+    #     return '\n'.join(
+    #         [str(ingredients) for ingredients in obj.ingredients.all()]
+    #     )
 
 
 @admin.register(Favorite)
