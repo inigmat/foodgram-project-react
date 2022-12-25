@@ -32,14 +32,14 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Представляет модель Recipe в интерфейсе администратора."""
-    list_display = ('id', 'name', 'author', 'get_favorites_count')
+    list_display = ('id', 'name', 'author', 'in_favorite')
     search_fields = ('author', 'name', 'tags')
     list_filter = ('name', 'author', 'tags')
     empty_value_display = EMPTY_VALUE
     inlines = (IngredientInline,)
 
     @admin.display(description='В избранном')
-    def is_favorited(self, obj):
+    def in_favorite(self, obj):
         # return Favorite.objects.filter(recipe=obj).count()
         return obj.favorites.count()
 
