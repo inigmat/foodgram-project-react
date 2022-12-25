@@ -37,10 +37,10 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('name', 'author', 'tags')
     empty_value_display = EMPTY_VALUE
     inlines = (IngredientInline,)
-    
+
     @admin.display(description='В избранном')
     def is_favorited(self, obj):
-        #return Favorite.objects.filter(recipe=obj).count()
+#        return Favorite.objects.filter(recipe=obj).count()
         return obj.recipe.count()
 
 
