@@ -39,7 +39,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'author')
     fields = (
         ('name', 'cooking_time',),
-        'ingredients',
+        # 'ingredients',
         'author',
         'tags',
         'text',
