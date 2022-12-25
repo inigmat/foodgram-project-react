@@ -5,10 +5,6 @@ from recipes.models import (Favorite, Ingredient, IngredientsRecipe, Recipe,
 EMPTY_VALUE = '-пусто-'
 
 
-# class IngredientInline(admin.TabularInline):
-#     model = IngredientsRecipe
-#     extra = 2
-
 class IngredientInline(admin.StackedInline):
     model = IngredientsRecipe
     autocomplete_fields = ('ingredients',)
