@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
 from recipes.models import (Favorite, Ingredient, IngredientsRecipe, Recipe,
                             ShoppingCart, Tag)
 
@@ -33,7 +34,7 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Представляет модель Recipe в интерфейсе администратора."""
-    list_display = ('id', 'name', 'author')
+    list_display = ('id', 'name', 'author', 'tags')
     fields = (
         ('name', 'cooking_time',),
         'author',
@@ -69,3 +70,5 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     search_fields = ('user',)
     list_filter = ('user',)
     empty_value_display = EMPTY_VALUE
+
+admin.site.unregister(Group)
