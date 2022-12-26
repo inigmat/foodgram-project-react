@@ -34,7 +34,7 @@ class IngredientAdmin(admin.ModelAdmin):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     """Представляет модель Recipe в интерфейсе администратора."""
-    list_display = ('id', 'name', 'author', 'tags')
+    list_display = ('id', 'name', 'author', 'tags_in_list')
     fields = (
         ('name', 'cooking_time',),
         'author',
@@ -52,6 +52,11 @@ class RecipeAdmin(admin.ModelAdmin):
     @admin.display(description='Количество добавлений в избранное')
     def favorited_number(self, obj):
         return obj.favorites.count()
+
+    @admin.display(description='Тэги')
+    def tags_in_list(self, obj):
+        list_ = [_.name for _ in obj.tags.all()]
+        return ', '.join(list_)
 
 
 @admin.register(Favorite)
