@@ -44,7 +44,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'favorited_number',
     )
     readonly_fields = ('favorited_number',)
-    search_fields = ('author', 'name', 'tags')
+    search_fields = ('name', 'author__username', 'tags__name')
     list_filter = ('name', 'author', 'tags')
     empty_value_display = EMPTY_VALUE
     inlines = (IngredientInline,)
