@@ -63,8 +63,8 @@ class RecipeAdmin(admin.ModelAdmin):
 class FavoriteAdmin(admin.ModelAdmin):
     """Представляет модель Favorite в интерфейсе администратора."""
     list_display = ('id', 'user', 'recipe')
-    search_fields = ('recipe__name', 'user__username',)
-    list_filter = ('user','recipe')
+    search_fields = ('recipe__name', 'user__username')
+    list_filter = ('user', 'recipe')
     empty_value_display = EMPTY_VALUE
 
 
