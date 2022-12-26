@@ -71,4 +71,5 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     list_filter = ('user',)
     empty_value_display = EMPTY_VALUE
 
+
 admin.site.unregister(Group)
