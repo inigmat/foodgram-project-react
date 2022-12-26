@@ -63,7 +63,7 @@ class RecipeAdmin(admin.ModelAdmin):
 class FavoriteAdmin(admin.ModelAdmin):
     """Представляет модель Favorite в интерфейсе администратора."""
     list_display = ('id', 'user', 'recipe')
-    search_fields = ('user',)
+    search_fields = ('recipe__name, user__username',)
     list_filter = ('user',)
     empty_value_display = EMPTY_VALUE
 
@@ -72,7 +72,7 @@ class FavoriteAdmin(admin.ModelAdmin):
 class ShoppingCartAdmin(admin.ModelAdmin):
     """Представляет модель ShoppingCart в интерфейсе администратора."""
     list_display = ('id', 'user', 'recipe')
-    search_fields = ('user',)
+    search_fields = ('user__username',)
     list_filter = ('user',)
     empty_value_display = EMPTY_VALUE
 
